@@ -1,0 +1,12 @@
+.fondo-navbar{
+    background-color: #4B4B4B;
+}
+a{
+    color: white;
+}
+
+ul li a:hover{
+    background: #ffffff;
+    border-radius: 0.2em;
+    color: black;
+}

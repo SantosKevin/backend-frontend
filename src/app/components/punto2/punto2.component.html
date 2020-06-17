@@ -1,0 +1,124 @@
+<div class="row">
+  <div class="col-12 fondoImagen">
+      <div class="row mt-3 mb-5 justify-content-center p-2 opacidad">
+          <div class="col-12 col-md-8">
+            <form class="card" #formAsistencia="ngForm" >
+              <div class="card-header fondo"> 
+                 <h3 class=" font-weight-bold text-white">  Confirma tu asistencia:  </h3>  
+               </div>
+                <div class="card-body fondo-body text-white">
+                  <div class="row form-group">
+                    <label class="col-sm-12 col-md-4 font-weight-bold">Usuario: </label>
+                     <input class="form-control col-sm-12 col-md-8" #user="ngModel" type="text" name="txtUsuario" pattern="[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" [(ngModel)]="asistente.usuario" placeholder="Correo electronico del votante" required/>
+                    <div *ngIf="user.invalid && (user.dirty || user.touched)" class="bg-danger mt-1 text-white col-sm-12 offset-md-4 col-md-8"> 
+                     <div *ngIf="user.errors.required"> Email de usuario es requerido.</div> 
+                    <div *ngIf="user.errors.pattern"> Email es invalido, ej: algo@algo.com.</div>
+                    </div>
+                </div>
+                 <div class="row form-group">
+                    <label class="col-sm-12 col-md-4 font-weight-bold" >Nombre de la organizacion: </label>
+                     <input class="form-control col-sm-12 col-md-8" #organizacion="ngModel" type="text" name="txtOrganizacion" [(ngModel)]="asistente.nombreOrganizacion" placeholder="Organizacion a la que perteneces" required/>
+                     <div *ngIf="organizacion.invalid && (organizacion.dirty || organizacion.touched)" class="bg-danger mt-1 text-white col-sm-12 offset-md-4 col-md-8"> 
+                       <div *ngIf="organizacion.errors.required"> Nombre de organizacion es requerido.</div> 
+                     </div>
+                   </div>
+                   <div class="row form-group">
+                    <label class="col-sm-12 col-md-4 font-weight-bold" >Solicita constancia: </label>
+                     <label class="col-sm-12 col-md-3"><input  type="radio" name="opcion" [(ngModel)]="asistente.requiereConstancia" [value]="true" required> SI</label>
+                     <label class="col-sm-12 col-md-3"><input  type="radio" name="opcion" [(ngModel)]="asistente.requiereConstancia" [value]="false" required> NO</label>
+                   </div>
+                      
+                 <div class="row form-group">
+                     <div class="col-12 p-3 mr-2">
+                       <button type="button" class="btn btn-dark m-1" (click)="registrar(); formAsistencia.reset() " [disabled]="!(formAsistencia.form.valid && btnGuardar)" ><i class="fas fa-check-square"></i> Guardar</button>                       
+                       <button *ngIf="btnModificar" type="button" class="btn btn-dark m-1" (click)="modificarAsistente(); formAsistencia.reset() " [disabled]="!(formAsistencia.form.valid && btnModificar)"><i class="fas fa-check-square"></i> Modificar</button>
+                       <button *ngIf="btnModificar" type="button" class="btn btn-dark m-1" (click)="cancelarModificacion(); formAsistencia.reset() " ><i class="fas fa-window-close"></i> Cancelar</button>                       
+                     </div>
+                  </div>
+                </div>
+        </form>
+      </div>
+            
+    </div>
+
+      <!--  -->
+      <div class="row mb-5">
+        <div class="col-sm-12 justify-content-center fondo">
+          <div class="h3 bg-gray text-center mt-2 mb-2 text-white"> LISTA DE ASISTENTES:</div>
+        </div>
+      </div>
+      <!-- tabla -->
+      <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-10 table-responsive">
+          <table class="table table-striped " [mfData]="asistentes" #mf="mfDataTable" [mfRowsOnPage]="5">
+            <thead class="fondo text-white">
+              <tr class="text-center">
+                <th style="width: 20%">
+                  <mfDefaultSorter by="usuario"><i class="fas fa-user"></i> Usuario</mfDefaultSorter>
+                </th>
+                <th style="width: 20%">
+                  <mfDefaultSorter by="nombreOrganizacion"><i class="fas fa-building"></i> Organizacion</mfDefaultSorter>
+                </th>
+                <th style="width: 20%">
+                  <mfDefaultSorter by="requiereConstancia"><i class="fas fa-check"></i> Solicita Constancia</mfDefaultSorter>
+                </th>
+                <th style="width: 10%">
+                  Acciones:
+              </th>
+              </tr>
+            </thead>
+            <tbody class="text-white fondo-body">
+              <tr *ngFor="let item of mf.data">
+                <td> {{item.usuario}} </td>
+                <td> {{item.nombreOrganizacion | uppercase}} </td>
+                <td class="text-center"> {{item.requiereConstancia | convertirBool}} </td> 
+                <td class="text-center"> 
+                  <button type="button" title="edit" class="btn btn-dark mr-1 mb-1" (click)="elegirAsistente(item)" ><i class="fas fa-edit"></i></button>    
+                  <button [disabled]="btnModificar" type="button" title="delete" class="btn btn-dark mr-1 mb-1" (click)="cargarAsistenteModal(item)" data-toggle="modal" data-target="#Punto2"><i class="fas fa-trash-alt"></i></button><!--  abrirModalConfirmacion(contenido) -->           
+                </td>  
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,15,20]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      
+      </div> 
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="Punto2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header fondo">
+        <h5 class="modal-title font-weight-bold text-white " id="exampleModalLabel"><i class="fas fa-exclamation-triangle text-danger"></i> CONFIRMACION DE ACCION: </h5>
+      </div>
+      <div class="modal-body text-white fondo-body">
+        <form>
+          <div class="form-group">
+            <div class="row">
+              <label class="col-12 font-weight-bold"> Eliminar <i class="fas fa-question text-danger"></i></label>
+               <label class="col-12 col-md-4 font-weight-bold">Usuario:</label>
+               <div class="col-12 col-md-8"> {{asistenteBorrar.usuario}} </div> 
+               <label class="col-12 col-md-4 font-weight-bold">Organizaci&oacute;n:</label>
+               <div class="col-12 col-md-8"> {{asistenteBorrar.nombreOrganizacion}} </div> 
+               <label class="col-12 col-md-4 font-weight-bold">Solicita Constancia:</label>
+               <div class="col-12 col-md-8"> {{asistenteBorrar.requiereConstancia | convertirBool}} </div> 
+            </div>
+          </div>
+       </form>
+      </div>
+      <div class="modal-footer fondo">
+        <button type="button" class="btn btn-dark" (click)="borrarAsistente()" data-dismiss="modal">ACEPTAR</button>
+        <button type="button" class="btn btn-dark"  data-dismiss="modal">CANCELAR</button>
+      </div>
+    </div>
+  </div>
+</div>

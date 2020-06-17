@@ -1,0 +1,189 @@
+<div class="row ">
+  <div class="col-12 fondoImagen">
+      <div class="row mt-3 mb-5 justify-content-center opacidad fondoImagen">
+          <div class="col-12 col-md-8">
+              <form class="card letra" method="post" action="" #formMensaje="ngForm">
+                  <div class="card-header fondo"> 
+                      <h3 class="font-weight-bold text-white"> <span> </span> Envia tu mensaje: <span> </span></h3>  
+                  </div> 
+                    <div class="card-body fondo-body">
+                      <div class="row form-group">
+                        <label class="col-sm-12 col-md-3 font-weight-bold text-white">Para: </label>
+                        <input class="form-control col-sm-12 col-md-9"  #numero="ngModel" type="tel" pattern="[0-9]{10}" maxlength="10" name="txtPara" [(ngModel)]="mensaje.para" placeholder="Telefono destino 3871234222" required/>
+                        <div *ngIf="numero.invalid && (numero.dirty || numero.touched)" class="alertColor mt-1 text-white col-sm-12 offset-md-3 col-md-9">
+                          <div *ngIf="numero.errors.required">
+                            Telefono es requerido.
+                          </div>
+                          <div *ngIf="numero.errors.pattern">
+                            Telefono destino debe tener 10 digitos, no se permiten letras
+                          </div>
+                        </div>
+                      </div>
+                    <div class="row form-group">
+                      <label class="col-sm-12 col-md-3 font-weight-bold text-white" >De: </label>
+                      <input class="form-control col-sm-12 col-md-9" #desde="ngModel" type="tel" pattern="[0-9]{10}" maxlength="10" name="txtDe" [(ngModel)]="mensaje.desde" placeholder="Escribe tu numero 3881111222" required />
+                      <div *ngIf="desde.invalid && (desde.dirty || desde.touched)" class="alertColor mt-1 text-white col-sm-12 offset-md-3 col-md-9">
+                        <div *ngIf="desde.errors.required">
+                          Telefono origen es requerido.
+                        </div>
+                        <div *ngIf="desde.errors.pattern">
+                          Telefono origen debe tener 10 digitos, no se permiten letras
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="idEmpresa" class="col-sm-12 col-md-3 font-weight-bold text-white">Empresa:</label>
+                      <select id="idEmpresa" class="form-control col-sm-12 col-md-9" required
+                          name="empresa" #empresa="ngModel" [(ngModel)] = "mensaje.empresa">
+                          <option *ngFor="let empresa of empresas" [ngValue]="empresa">{{empresa.nombre}}</option>
+                      </select>
+                      <div *ngIf="empresa.invalid && (empresa.dirty || empresa.touched)" class="alertColor mt-1 text-white col-sm-12 offset-md-3 col-md-9">
+                        <div *ngIf="empresa.errors.required">
+                          Empresa es requerida.
+                        </div>
+                      </div>
+                    </div>    
+                    <div class="row"> 
+                      <label class="col-12 col-md-8 font-weight-bold text-white">Tu mensaje: </label> 
+                      <label class="col-12 col-md-4 text-white">Te quedan: <span class="font-weight-bold">{{tamTexto}}</span> letras</label>
+                    </div>
+
+                    <div class="row form-group"> 
+                      <textarea class="form-control mr-2 ml-2" #textoMensaje="ngModel" [maxlength]="tamMaxTexto" rows="5" name="txtTexto" [(ngModel)]="mensaje.texto" (ngModelChange)="cambiarTamTexto()" required >  
+                      </textarea>
+                      <div *ngIf="textoMensaje.invalid && (textoMensaje.dirty || textoMensaje.touched)" class="alertColor mt-1 text-white col-sm-12">
+                        <div *ngIf="textoMensaje.errors.required">
+                          El mensaje debe tener al menos 1 caracter
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col-12 text-right">
+                        <button type="button" class="btn btn-dark ml-2 " data-toggle="modal" data-target="#Punto1" (click)="cargarNombreEmpresa()" [disabled]="!(formMensaje.form.valid && btnGuardar)"><i class="fas fa-check-square"></i> Enviar</button>            
+                        <button type="button" class="btn btn-dark ml-2 " (click)="limpiarMensaje()" ><i class="fas fa-broom"></i> Limpiar</button>
+                        <button *ngIf="btnModificar == true" type="button" class="btn btn-dark m-1" (click)="modificarMensaje(); formMensaje.reset() " [disabled]="!(formMensaje.form.valid && btnModificar)"><i class="fas fa-check-square"></i> Modificar</button>            
+                        <button *ngIf="btnModificar == true" type="button" class="btn btn-dark m-1" (click)="cancelarModificacion(); formMensaje.reset() " ><i class="fas fa-window-close"></i> Cancelar Modificaci&oacute;n</button>
+                      </div>
+                    </div>           
+                    <span class="text-white">*el boton limpiar solo limpia el mensaje. </span>
+                  </div>
+                </form>
+          </div>
+        
+      </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="Punto1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header fondo">
+            <h5 class="modal-title font-weight-bold text-white" id="exampleModalLabel">Resumen del Mensaje: </h5>
+          </div>
+          <div class="modal-body fondo-body text-white">
+            <form>
+              <div class="form-group">
+                <div class="row ">
+                  <label class="col-12 col-md-3 font-weight-bold"><i class="fas fa-sort-numeric-up"></i> Para:</label>
+                    <div class="col-12 col-md-9"> {{mensaje.para}} </div> 
+                </div>
+                <hr class="bg-white">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-weight-bold"><i class="fas fa-sort-numeric-down-alt"></i> De:</label>
+                  <div class="col-12 col-md-9"> {{mensaje.desde}}</div>  <hr>
+                </div>
+                <hr class="bg-white">
+                <div class="row">
+                  <label class="col-12 col-md-3 font-weight-bold"><i class="fas fa-building"></i> Empresa:</label>
+                <div class="col-12 col-md-9"> {{nombreEmpresa}}</div>  <hr>
+              </div>
+              <hr class="bg-white">
+              <div class="row">
+                <label class=" col-12 font-weight-bold"><i class="fas fa-envelope-open-text"></i> Mensaje:</label>
+                </div>
+                <div class="row textoCortado">
+                  <label class="col-12"> {{mensaje.texto}} </label>
+                </div>
+            </div>
+          </form>
+          </div>
+          <div class="modal-footer fondo">
+            <button type="button" class="btn btn-dark" (click)="enviarMensaje(); formMensaje.reset()"  data-dismiss="modal">ACEPTAR</button>
+            <button type="button" class="btn btn-dark"  data-dismiss="modal">CANCELAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center fondo">
+      <div class="col-12 col-md-10 text-center">
+        <div class="h2 text-white">  MENSAJES ENVIADOS:  </div> 
+      </div>
+    </div>
+
+
+    <!-- tabla -->
+    <div class="row justify-content-center mt-3">
+      <div class="col-sm-12 col-md-10 table-responsive">
+        <table class="table text-white">
+          <thead class=" fondo">
+            <tr class="text-center">
+              <th scope="col"><i class="fas fa-sort-numeric-up"></i> Para:</th>
+              <th scope="col"><i class="fas fa-sort-numeric-down-alt"></i> Desde:</th>
+              <th scope="col"><i class="fas fa-envelope-open-text"></i> Texto:</th>
+              <th scope="col"><i class="fas fa-calendar-alt"></i> Fecha:</th>
+              <th scope="col"><i class="fas fa-building"></i>Empresa:</th>
+              <th scope="col"> Acciones:</th>
+            </tr>
+          </thead>
+          <tbody class="fondo-body">
+            <tr *ngFor="let item of mensajes">
+              <td> {{item.para}} </td>
+              <td> {{item.desde}} </td>
+              <td class=""> {{item.texto}} </td>
+              <td> {{item.fecha | date:"short"}} </td>
+              <td> {{item.empresa.nombre}} </td>
+              <td class="text-center"> 
+                <button type="button" title="edit Msj" class="btn btn-dark mr-1 mb-1" (click)="elegirMensaje(item)" ><i class="fas fa-edit"></i></button>    
+                <button [disabled]="btnModificar" type="button" title="delete Msj" class="btn btn-dark mr-1 mb-1" (click)="cargarMensajeModal(item)" data-toggle="modal" data-target="#mensajeModal"><i class="fas fa-trash-alt"></i></button>         
+              </td>     
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+    </div> 
+  </div>
+</div>
+
+<!-- Modal Eliminar Mensaje -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header fondo">
+        <h5 class="modal-title font-weight-bold text-white " id="exampleModalLabel"><i class="fas fa-exclamation-triangle text-danger"></i> CONFIRMACION DE ACCION: </h5>
+      </div>
+      <div class="modal-body text-white fondo-body">
+        <form>
+          <div class="form-group">
+            <div class="row">
+              <label class="col-12 font-weight-bold"> Eliminar <i class="fas fa-question text-danger"></i></label>
+               <label class="col-12 col-md-3 font-weight-bold">Desde:</label>
+               <div class="col-12 col-md-9"> {{mensajeBorrar.desde}} </div> 
+               <label class="col-12 col-md-3 font-weight-bold">Para:</label>
+               <div class="col-12 col-md-9"> {{mensajeBorrar.para}} </div> 
+               <label class="col-12 col-md-3 font-weight-bold">Texto:</label>
+               <div class="col-12 col-md-9"> {{mensajeBorrar.texto}} </div> 
+               <label class="col-12 col-md-3 font-weight-bold">Empresa:</label>
+               <div class="col-12 col-md-9"> {{nombreEmpresa}} </div> 
+            </div>
+          </div>
+       </form>
+      </div>
+      <div class="modal-footer fondo">
+        <button type="button" class="btn btn-dark" (click)="borrarMensaje()" data-dismiss="modal">ACEPTAR</button>
+        <button type="button" class="btn btn-dark"  data-dismiss="modal">CANCELAR</button>
+      </div>
+    </div>
+  </div>
+</div>

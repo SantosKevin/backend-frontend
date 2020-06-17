@@ -1,0 +1,27 @@
+<nav class=" row navbar navbar-icon-top navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand" [routerLink]="['home']">TP Backend-Frontend</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#despliegue" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class=" justify-content-center collapse navbar-collapse" id="despliegue">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['home']"><i class="fas fa-home"></i> Inicio</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" [routerLink]="['mensajeria']"><i class="far fa-envelope"></i> Punto1</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" [routerLink]="['asistente']"><i class="fas fa-hands-helping"></i> Punto2</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['pasajes']"><i class="fas fa-plane"></i> Punto3</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['jugar']"><i class="fas fa-gamepad"></i> Punto4</a>
+      </li>
+    </ul>
+  </div>
+
+</nav>

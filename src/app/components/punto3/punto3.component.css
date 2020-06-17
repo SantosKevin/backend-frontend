@@ -1,0 +1,33 @@
+.fondo{
+    background-color: #DA7635;
+}
+.fondo-body{
+    background-color: #F49456;
+}
+.fondoImagen{
+    background-image: url("./../../../assets/img/fondoAvion.jpg");
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    background-attachment: fixed;
+}
+.opacidad{
+    opacity: 97%;
+}
+
+div button:disabled{
+    cursor: not-allowed;
+}
+.alertColor{
+    background-color: #971414;
+}
+
+.colorBoton{
+    background-color: #FFFFFF;
+}
+.colorBoton:hover{
+    background-color: #b65b1e;
+    color: white;
+}

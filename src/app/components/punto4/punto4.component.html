@@ -1,0 +1,181 @@
+<div class="row">
+    <div class="col-12 fondoImagen">
+        <div class=" row mt-3 mb-3 justify-content-center opacidad">
+            <div class="col-12 m-2 bg-dark">
+                <h4 class="text-white"> No se hicieron observaciones sobre el juego. Diviertase jugando.</h4>
+            </div>
+            <div class="col-10 justify-content-center">
+                <div class="row font-weight-bold h3 text-center text-white">
+                    ELIGA LA TEMATICA!
+                </div>
+                <div class="row justify-content-center">
+                    <select class="col-sm-12 col-md-10 m-2 h5" [(ngModel)]="tematica" (change)="actualizarTematica()" > 
+                        <option value="animales">Animales</option>
+                        <option value="utiles">Utiles Escolares</option>
+                    </select>
+                    <div *ngIf="alertaSeleccion" class="h5 alert-info"><i class="fas fa-arrow-circle-up"></i> no te olvides de seleccionar una categoria para iniciar</div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row mt-4 mb-4 justify-content-center opacidad pb-2">
+            <div class="col-12 col-md-8">
+                <div class="card letra">
+                    <div class="card-header fondo"> 
+                        <h3 class=" font-weight-bold p3">  A JUGAR!:  </h3>
+                        <div class="row text-center">
+                            <div class="col-6 font-weight-bold">
+                                VIDAS RESTANTES: 
+                                <div class="d-inline">
+                                    <div class="d-inline" *ngFor="let item of [0,1,2,3,4,5]; index as i"> 
+                                        <i *ngIf="i < vidas" class="fas fa-heart mr-1 d-sm-inline" style="color: red;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 font-weight-bold">
+                                PUNTAJE: <div class=" font-weight-bold d-inline">  <span class="h4 text-success">{{puntaje}} <i class="fas fa-star text-success"></i></span> </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" id="id">
+                        <div *ngFor="let pal of palabras; index as i "> 
+                            <div *ngIf="i == indice">
+                                <div>
+                                    <img [src]="pal.urlImagen" alt="imagen" class="img-fluid">
+                                </div>
+                                <div class="text-center">
+                                
+                                    <hr>
+                                    <div class="row m1">
+                                        <div class="col-12">
+                                            <div class="text-center d-inline p-2 col-3" *ngFor="let item of palabraArray; index as i "  >
+                                                <input *ngIf="mostrarInputs" type="text" class="entrada mr-1 mb-1 text-center" maxlength="1" [(ngModel)]="palabraActual[i]" (ngModelChange)="comprobarLetra(i,pal)" style="text-transform:uppercase;"> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row mt-2 mb-2">
+                                    <div class="col-12 font-weight-bold text-center p3">
+                                        {{pal.palabraEspaniol | uppercase}}
+                                    </div>
+                                
+                                </div>
+                            </div>                   
+                        </div>
+                        <button class="btn btn-danger btn-block" [disabled]="iniciarOK" (click)="iniciarJuego()"> INICIAR JUEGO!</button>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    
+
+        <div class="row justify-content-center opacidad mb-4">
+            <div class="col-11 p-2 card fondo">
+            <div class="bg-dark">
+                <p class="font-weight-bold text-white h4 p-3">Instrucciones: </p> 
+            </div>
+            <p class="mt-2"> Complete la palabra en ingles. </p>
+            <p> Puede hacerlo eligiendo cualquier posicion y escribiendo la letra. </p>  
+            <p> Cada vez que no acierte una palabra perderá una vida.</p> 
+            <p> Cada vez que acierte sumará un punto. </p> 
+            <p> Cada vez que pierda o gane se abrir&aacute; un modal informando su resultado. Al cerrarlo el juego se reiniciar&aacute; autom&aacute;ticamente. </p> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- este input boton es solo para activar el modal de ganado -->
+<input  id="modalBtn" data-toggle="modal" data-target="#gano" class="ocultar">
+<input  id="modalBtnPerdio" data-toggle="modal" data-target="#perdio" class="ocultar">
+
+<!-- Modal GANO-->
+<div class="modal fade" id="gano" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header fondo">
+            <h4 class="modal-title text-center" id="modal-basic-title">Resumen de la partida:</h4>
+        </div>
+        <div class="modal-body fondo-body text-dark">
+            <form>
+                <div class="form-group">
+                  <label for="">cierra esto para intentarlo de nuevo</label> <hr>
+                    <label class="text-success">Puntaje obtenido:</label>
+                      {{puntaje}} <i class="fas fa-star"></i><hr> 
+                   <label class="text-danger">Vidas Restantes:</label>
+                      {{vidas}} <i class="fas fa-heart text-danger"></i><hr>
+                </div>
+             </form>
+        </div>
+        <div class="modal-footer fondo-body">
+            <button type="button" class="btn btn-dark"  (click)="refrescarPalabras() ; iniciarJuego()"   data-dismiss="modal">OKEY!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Perdio-->
+<div class="modal fade" id="perdio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header fondo">
+            <h4 class="modal-title text-center" id="modal-basic-title">GAME OVER: <i class="fas fa-skull-crossbones"></i> </h4>
+        </div>
+        <div class="modal-body fondo-body text-dark">
+            <form>
+                <div class="form-group">
+                    <label for="">cierra esto para intentarlo de nuevo <i class="fas fa-grin-squint-tears"></i></label> <hr>
+                    <label class="text-success">Puntaje obtenido:</label>
+                      {{puntaje}} <i class="fas fa-star text-success"></i><hr> 
+                   <label class="text-danger">Vidas Restantes:</label>
+                      {{vidas}} <i class="fas fa-heart text-danger"></i><hr>
+                </div>
+             </form>
+        </div>
+        <div class="modal-footer fondo-body">
+            <button type="button" class="btn btn-dark"  (click)="refrescarPalabras() ; iniciarJuego()"   data-dismiss="modal">DE NUEVO!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- <ng-template #content let-c="close" let-d="dismiss" class="modal">
+     <div class="modal-header ">
+        <h4 class="modal-title text-center" id="modal-basic-title">Resumen de la partida:</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click'); refrescarPalabras();iniciarJuego()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+     </div>
+      <div class="modal-body fondo-body">
+        <form>
+          <div class="form-group">
+            <label for="">cierra esto para intentarlo de nuevo</label> <hr>
+              <label class="text-success">Puntaje obtenido:</label>
+                {{puntaje}} <i class="fas fa-star"></i><hr> 
+             <label class="text-danger">Vidas Restantes:</label>
+                {{vidas}} <i class="fas fa-heart text-danger"></i><hr>
+          </div>
+       </form>
+      </div>
+ </ng-template>
+
+ <ng-template  #contentPerdio let-c="close" let-d="dismiss" class="modal">
+    <div class="modal-header ">
+       <h4 class="modal-title text-center" id="modal-basic-title">GAME OVER: <i class="fas fa-skull-crossbones"></i> </h4>
+       <button type="button" class="close" aria-label="Close" (click)="d('Cross click'); refrescarPalabras() ; iniciarJuego()">
+         <span aria-hidden="true">&times;</span>
+       </button>
+    </div>
+     <div class="modal-body fondo-body">
+       <form>
+         <div class="form-group">
+             <label for="">cierra esto para intentarlo de nuevo <i class="fas fa-grin-squint-tears"></i></label> <hr>
+             <label class="text-success">Puntaje obtenido:</label>
+               {{puntaje}} <i class="fas fa-star text-success"></i><hr> 
+            <label class="text-danger">Vidas Restantes:</label>
+               {{vidas}} <i class="fas fa-heart text-danger"></i><hr>
+         </div>
+      </form>
+     </div>
+</ng-template> -->
+
